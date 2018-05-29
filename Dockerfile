@@ -8,7 +8,7 @@ WORKDIR /
 
 # Install Docker and Docker Compose
 RUN apk --update --no-cache \
-    add curl device-mapper py-pip iptables && \
+    add curl device-mapper py-pip iptables git openssh make && \
     rm -rf /var/cache/apk/* && \
     curl https://get.docker.com/builds/Linux/x86_64/docker-${DOCKER_VERSION}.tgz | tar zx && \
     mv /docker/* /bin/ && chmod +x /bin/docker* && \
@@ -31,6 +31,11 @@ RUN curl -L https://github.com/progrium/entrykit/releases/download/v${ENTRYKIT_V
 COPY docker-lib.sh /docker-lib.sh
 
 WORKDIR $GOPATH
+
+RUN go get github.com/golang/mock/mockgen && \
+    go get github.com/golang/dep/cmd/dep && \
+    go get github.com/axw/gocov/gocov && \
+    go get gopkg.in/matm/v1/gocov-html
 
 ENTRYPOINT [ \
 	"switch", \
